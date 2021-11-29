@@ -151,7 +151,7 @@ def system_first_degree():
 
 
 def test_miller3(n):
-    a = random.randint(5, n-2)
+    a = random.randint(1, n-2)
     exp = n - 1
     while not exp & 1:
         exp >>= 1
@@ -341,3 +341,28 @@ def fast_pow_mod():
                 c = pow(c * a, 1, m)
 
     return f'{a} в степени {n1} сравнимо с {c} по модулю {m}'
+
+
+def test_miller4(n):
+    s = 0
+    m = n - 1
+    a = random.randint(2, n-2)
+
+    while m % 2 == 0:
+        m = m / 2
+        s += 1
+    r = int((n-1) / pow(2, s))
+    '''n-1 = 2**s r'''
+    y = pow(a, r, n)
+    if y != 1 and y != n-1:
+        j = 1
+        while j <= s - 1 and y != n - 1:
+            y = pow(y, 2, n)
+            if y == 1:
+                return False
+            j += 1
+
+        if y != n - 1:
+            return False
+
+    return True
