@@ -167,9 +167,7 @@ def test_miller3(n):
     return False
 
 
-def symbol_legendre():
-    a, n = map(int, input().split())
-
+def symbol_legendre(a, n):
     b = pow(a, int((n-1)/2), n)
 
     if b != 1:
@@ -366,3 +364,105 @@ def test_miller4(n):
             return False
 
     return True
+
+
+def symbol_jacobi(a, n):
+    j = 1
+    if n < 5 and n != 4:
+        j = symbol_legendre(a, n)
+        return j
+
+    elif n == 4:
+        lst = factorization(n)
+        for i in lst:
+            j_i = symbol_legendre(a, i)
+            j = j * j_i
+        return j
+
+    elif n > 5:
+        check = test_miller4(n)
+        if check is True:
+            j = symbol_legendre(a, n)
+            return j
+        else:
+            lst = factorization(n)
+            for i in lst:
+                j_i = symbol_legendre(a, i)
+                j = j * j_i
+            return j
+
+
+def factorization(n):
+    lst = []
+
+    if n < 5:
+        if n == 2:
+            lst = [2]
+        elif n == 3:
+            lst = [3]
+        elif n == 4:
+            lst = [2, 2]
+        return lst
+    else:
+        check = test_miller4(n)
+        if check is True:
+            lst.append(n)
+            return lst
+
+        else:
+            i = 7
+            l_i = [2, 3, 5]
+
+            for i in l_i:
+                while n % i == 0:
+                    n = int(n / i)
+                    lst.append(i)
+            if n > 5:
+                check = test_miller4(n)
+                if check is True:
+                    lst.append(n)
+                else:
+                    for i in range(7, n, 2):
+                        check_i = test_miller4(i)
+                        if check_i is True:
+                            while n % i == 0:
+                                n = int(n / i)
+                                lst.append(i)
+                        else:
+                            pass
+                return lst
+            else:
+                return lst
+
+
+def generation_simple(k):
+
+    binary = []
+    while k != 0:
+        bit = random.randint(0, 1)
+        binary.append(bit)
+        k = k - 1
+
+    del binary[-1]
+    binary.append(1)
+    del binary[0]
+    binary.insert(0, 1)
+
+    p = 0
+    for i in range(len(binary)):
+        if binary[i] == 1:
+            p = p + pow(2, i)
+        else:
+            continue
+
+    test = []
+    for i in range(100):
+
+        test.append(test_miller3(p))
+
+    if test[i] is True:
+
+        return print(f'Число {p} - простое. Число итераций проверки - {len(test)}')
+
+    else:
+        generation_simple(k)
