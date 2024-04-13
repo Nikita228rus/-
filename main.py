@@ -1,4 +1,4 @@
-from algoritms import *
+from algorithms import *
 
 
 def menu():
